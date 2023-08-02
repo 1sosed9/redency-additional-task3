@@ -22,26 +22,35 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteNote = exports.updateNote = exports.createNote = exports.getNoteById = exports.getAllNotes = void 0;
 const NotesRepo = __importStar(require("../repositories/notes.repository"));
-const getAllNotes = () => {
+const getAllNotes = () => __awaiter(void 0, void 0, void 0, function* () {
     return NotesRepo.getAllNotes();
-};
+});
 exports.getAllNotes = getAllNotes;
-const getNoteById = (id) => {
+const getNoteById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return NotesRepo.getNoteById(id);
-};
+});
 exports.getNoteById = getNoteById;
-const createNote = (note) => {
+const createNote = (note) => __awaiter(void 0, void 0, void 0, function* () {
     return NotesRepo.addNote(note);
-};
+});
 exports.createNote = createNote;
-const updateNote = (id, updatedNote) => {
+const updateNote = (id, updatedNote) => __awaiter(void 0, void 0, void 0, function* () {
     return NotesRepo.updateNote(id, updatedNote);
-};
+});
 exports.updateNote = updateNote;
-const deleteNote = (id) => {
-    NotesRepo.removeNote(id);
-};
+const deleteNote = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    return NotesRepo.removeNote(id);
+});
 exports.deleteNote = deleteNote;

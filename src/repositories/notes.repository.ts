@@ -1,63 +1,41 @@
+import { Pool } from 'pg';
 import { Note } from "../models/note.model";
 
-const notes: Note[] = [];
+const pool = new Pool({
+  user: 'postgres',
+  host: 'db',
+  database: 'notesdb',
+  password: '1111',
+  port: 5432,
+});
 
-// Додавання початкових даних
-export const addInitialData = (): void => {
-  const initialData: Note[] = [
-    {
-      id: "1",
-      name: "name",
-      date: new Date("2023-07-25T12:30:00").toString(),
-      content: "Remember to buy groceries on 26/7/2023",
-      category: "Task",
-      archived: false,
-    },
-    {
-      id: "2",
-      name: "name",
-      date: new Date("2023-07-24T18:45:00").toString(),
-      content: "Had an interesting idea today!",
-      category: "Idea",
-      archived: false,
-    },
-    {
-      id: "3",
-      name: "name",
-      date: new Date("2023-07-23T09:15:00").toString(),
-      content: "What if we implement a new feature?",
-      category: "Random Thought",
-      archived: false,
-    },
-  ];
-
-  notes.push(...initialData);
+export const getAllNotes = async (): Promise<Note[]> => {
+  const { rows } = await pool.query('SELECT * FROM notes');
+  return rows;
 };
 
-export const getAllNotes = (): Note[] => {
-  return notes;
+export const getNoteById = async (id: string): Promise<Note | undefined> => {
+  const { rows } = await pool.query('SELECT * FROM notes WHERE id = $1', [id]);
+  return rows[0];
 };
 
-export const getNoteById = (id: string): Note | undefined => {
-  return notes.find((note) => note.id === id);
-};
-
-export const addNote = (note: Note): Note => {
-  notes.push(note);
+export const addNote = async (note: Note): Promise<Note> => {
+  const { id, name, date, content, category, archived } = note;
+  const query = 'INSERT INTO notes (id, name, date, content, category, archived) VALUES ($1, $2, $3, $4, $5, $6)';
+  await pool.query(query, [id, name, date, content, category, archived]);
   return note;
 };
 
-export const updateNote = (id: string, updatedNote: Note): Note | undefined => {
-  const index = notes.findIndex((note) => note.id === id);
-  if (index !== -1) {
-    notes[index] = { ...notes[index], ...updatedNote };
-    return notes[index];
+export const updateNote = async (id: string, updatedNote: Note): Promise<Note | undefined> => {
+  const { name, date, content, category, archived } = updatedNote;
+  const query = 'UPDATE notes SET name = $1, date = $2, content = $3, category = $4, archived = $5 WHERE id = $6';
+  const { rowCount } = await pool.query(query, [name, date, content, category, archived, id]);
+  if (rowCount > 0) {
+    return updatedNote;
   }
 };
 
-export const removeNote = (id: string): void => {
-  const index = notes.findIndex((note) => note.id === id);
-  if (index !== -1) {
-    notes.splice(index, 1);
-  }
+export const removeNote = async (id: string): Promise<void> => {
+  const query = 'DELETE FROM notes WHERE id = $1';
+  await pool.query(query, [id]);
 };

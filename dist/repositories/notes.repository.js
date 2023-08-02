@@ -1,63 +1,51 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeNote = exports.updateNote = exports.addNote = exports.getNoteById = exports.getAllNotes = exports.addInitialData = void 0;
-const notes = [];
-// Додавання початкових даних
-const addInitialData = () => {
-    const initialData = [
-        {
-            id: "1",
-            name: "name",
-            date: new Date("2023-07-25T12:30:00").toString(),
-            content: "Remember to buy groceries on 26/7/2023",
-            category: "Task",
-            archived: false,
-        },
-        {
-            id: "2",
-            name: "name",
-            date: new Date("2023-07-24T18:45:00").toString(),
-            content: "Had an interesting idea today!",
-            category: "Idea",
-            archived: false,
-        },
-        {
-            id: "3",
-            name: "name",
-            date: new Date("2023-07-23T09:15:00").toString(),
-            content: "What if we implement a new feature?",
-            category: "Random Thought",
-            archived: false,
-        },
-    ];
-    notes.push(...initialData);
-};
-exports.addInitialData = addInitialData;
-const getAllNotes = () => {
-    return notes;
-};
+exports.removeNote = exports.updateNote = exports.addNote = exports.getNoteById = exports.getAllNotes = void 0;
+const pg_1 = require("pg");
+const pool = new pg_1.Pool({
+    user: 'postgres',
+    host: 'db',
+    database: 'notesdb',
+    password: '1111',
+    port: 5432,
+});
+const getAllNotes = () => __awaiter(void 0, void 0, void 0, function* () {
+    const { rows } = yield pool.query('SELECT * FROM notes');
+    return rows;
+});
 exports.getAllNotes = getAllNotes;
-const getNoteById = (id) => {
-    return notes.find((note) => note.id === id);
-};
+const getNoteById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const { rows } = yield pool.query('SELECT * FROM notes WHERE id = $1', [id]);
+    return rows[0];
+});
 exports.getNoteById = getNoteById;
-const addNote = (note) => {
-    notes.push(note);
+const addNote = (note) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, name, date, content, category, archived } = note;
+    const query = 'INSERT INTO notes (id, name, date, content, category, archived) VALUES ($1, $2, $3, $4, $5, $6)';
+    yield pool.query(query, [id, name, date, content, category, archived]);
     return note;
-};
+});
 exports.addNote = addNote;
-const updateNote = (id, updatedNote) => {
-    const index = notes.findIndex((note) => note.id === id);
-    if (index !== -1) {
-        notes[index] = Object.assign(Object.assign({}, notes[index]), updatedNote);
-        return notes[index];
+const updateNote = (id, updatedNote) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, date, content, category, archived } = updatedNote;
+    const query = 'UPDATE notes SET name = $1, date = $2, content = $3, category = $4, archived = $5 WHERE id = $6';
+    const { rowCount } = yield pool.query(query, [name, date, content, category, archived, id]);
+    if (rowCount > 0) {
+        return updatedNote;
     }
-};
+});
 exports.updateNote = updateNote;
-const removeNote = (id) => {
-    const index = notes.findIndex((note) => note.id === id);
-    if (index !== -1) {
-        notes.splice(index, 1);
-    }
-};
+const removeNote = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = 'DELETE FROM notes WHERE id = $1';
+    yield pool.query(query, [id]);
+});
 exports.removeNote = removeNote;
