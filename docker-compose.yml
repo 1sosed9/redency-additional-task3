@@ -1,0 +1,30 @@
+version: '3'
+services:
+  # Контейнер для Node.js додатку
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    environment:
+      - PGUSER=postgres
+      - PGHOST=db
+      - PGDATABASE=notesdb
+      - PGPASSWORD=your_postgres_password
+      - PGPORT=5432
+
+  # Контейнер для PostgreSQL бази даних
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1111
+      - POSTGRES_DB=notesdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
