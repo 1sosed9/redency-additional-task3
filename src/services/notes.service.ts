@@ -1,5 +1,6 @@
-import * as NotesRepo from '../repositories/notes.repository';
-import { Note } from '../models/note.model';
+import * as NotesRepo from "../repositories/notes.repository";
+import { Note } from "../models/note.model";
+
 
 export const getAllNotes = (): Note[] => {
   return NotesRepo.getAllNotes();

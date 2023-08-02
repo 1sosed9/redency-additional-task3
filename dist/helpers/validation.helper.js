@@ -35,10 +35,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateNoteSchema = void 0;
 const Yup = __importStar(require("yup"));
 const noteSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    date: Yup.string().required('Date is required'),
-    category: Yup.string().required('Category is required'),
-    content: Yup.string().required('Content is required'),
+    name: Yup.string().required("Name is required"),
+    date: Yup.string().required("Date is required"),
+    category: Yup.string().required("Category is required"),
+    content: Yup.string().required("Content is required"),
 });
 const validateNoteSchema = (note) => __awaiter(void 0, void 0, void 0, function* () {
     yield noteSchema.validate(note, { abortEarly: false });

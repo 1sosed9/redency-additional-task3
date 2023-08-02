@@ -24,7 +24,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteNote = exports.updateNote = exports.createNote = exports.getNoteById = exports.getAllNotes = void 0;
-// src/services/notes.service.ts
 const NotesRepo = __importStar(require("../repositories/notes.repository"));
 const getAllNotes = () => {
     return NotesRepo.getAllNotes();

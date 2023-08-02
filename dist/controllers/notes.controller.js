@@ -38,7 +38,7 @@ const getNoteById = (req, res) => {
         res.json(note);
     }
     else {
-        res.status(404).json({ error: 'Note not found' });
+        res.status(404).json({ error: "Note not found" });
     }
 };
 exports.getNoteById = getNoteById;
@@ -54,7 +54,7 @@ const createNote = (req, res) => {
             res.status(400).json({ error: error.message });
         }
         else {
-            res.status(500).json({ error: 'An unknown error occurred' });
+            res.status(500).json({ error: "An unknown error occurred" });
         }
     }
 };
@@ -68,7 +68,7 @@ const updateNote = (req, res) => {
         res.json(note);
     }
     else {
-        res.status(404).json({ error: 'Note not found' });
+        res.status(404).json({ error: "Note not found" });
     }
 };
 exports.updateNote = updateNote;
